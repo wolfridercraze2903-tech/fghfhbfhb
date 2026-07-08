@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restoval Cricket Coaching Academy</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            light: '#4ade80',
+                            DEFAULT: '#16a34a', // Primary Green
+                            dark: '#15803d',
+                            darker: '#14532d'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom Styles -->
+    <style>
+        /* Base & Resets */
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Hero Image Overlay */
+        .hero-bg {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(22, 163, 74, 0.4)), url('https://images.unsplash.com/photo-1531415074968-036ba1b575da?q=80&w=2067&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        /* Scroll Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Sticky Nav Transition */
+        #navbar {
+            transition: all 0.3s ease;
+        }
+        #navbar.scrolled {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Player Card Hover Effects */
+        .player-card .overlay {
+            background: linear-gradient(to top, rgba(21, 128, 61, 0.9) 0%, rgba(0,0,0,0) 100%);
+            bottom: -100%;
+            transition: bottom 0.4s ease;
+        }
+        .player-card:hover .overlay {
+            bottom: 0;
+        }
+        .player-card img {
+            transition: transform 0.5s ease;
+        }
+        .player-card:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #16a34a;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #15803d;
+        }
+
+        /* Testimonial Slider */
+        .testimonial-slide {
+            display: none;
+            animation: fadein 0.5s ease-in-out;
+        }
+        .testimonial-slide.active {
+            display: block;
+        }
+        @keyframes fadein {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Masonry Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-auto-rows: 250px;
+            grid-auto-flow: dense;
+            gap: 1rem;
+        }
+        .gallery-item:nth-child(2n) { grid-row: span 2; }
+        .gallery-item:nth-child(3n) { grid-column: span 2; }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        /* Mobile Menu */
+        #mobile-menu {
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        #mobile-menu.open {
+            max-height: 400px;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="text-gray-800 antialiased bg-gray-50">
+
+    <!-- Navigation Bar -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-white/90 backdrop-blur-sm shadow-sm py-3">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center">
+                <!-- Brand Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="#" class="flex items-center gap-2 text-gray-900 hover:opacity-80 transition-opacity">
+                        <i class="fa-solid fa-medal text-brand text-3xl"></i>
+                        <span class="font-bold text-2xl tracking-tight">Restoval<span class="text-brand">.</span></span>
+                    </a>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-6 lg:space-x-8 items-center font-medium text-sm lg:text-base">
+                    <a href="#home" class="text-gray-700 hover:text-brand transition-colors">Home</a>
+                    <a href="#about" class="text-gray-700 hover:text-brand transition-colors">About</a>
+                    <a href="#programs" class="text-gray-700 hover:text-brand transition-colors">Programs</a>
+                    <a href="#coaches" class="text-gray-700 hover:text-brand transition-colors">Coaches</a>
+                    <a href="#players" class="text-gray-700 hover:text-brand transition-colors">Players</a>
+                    <a href="#gallery" class="text-gray-700 hover:text-brand transition-colors">Gallery</a>
+                    <a href="#testimonials" class="text-gray-700 hover:text-brand transition-colors">Testimonials</a>
+                    <a href="#contact" class="px-5 py-2 bg-brand text-white rounded-full hover:bg-brand-dark transition-colors shadow-md hover:shadow-lg transform hover:-translate-y-0.5">Contact</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-700 hover:text-brand focus:outline-none p-2">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="md:hidden bg-white shadow-inner">
+            <div class="px-4 pt-2 pb-6 space-y-2 text-center flex flex-col">
+                <a href="#home" class="block px-3 py-2 text-gray-700 hover:text-brand hover:bg-green-50 rounded-md">Home</a>
+                <a href="#about" class="block px-3 py-2 text-gray-700 hover:text-brand hover:bg-green-50 rounded-md">About</a>
+                <a href="#programs" class="block px-3 py-2 text-gray-700 hover:text-brand hover:bg-green-50 rounded-md">Programs</a>
+                <a href="#coaches" class="block px-3 py-2 text-gray-700 hover:text-brand hover:bg-green-50 rounded-md">Coaches</a>
+                <a href="#players" class="block px-3 py-2 text-gray-700 hover:text-brand hover:bg-green-50 rounded-md">Players</a>
+                <a href="#gallery" class="block px-3 py-2 text-gray-700 hover:text-brand hover:bg-green-50 rounded-md">Gallery</a>
+                <a href="#testimonials" class="block px-3 py-2 text-gray-700 hover:text-brand hover:bg-green-50 rounded-md">Testimonials</a>
+                <a href="#contact" class="block mt-4 px-5 py-3 bg-brand text-white rounded-full mx-auto w-3/4 shadow-md font-medium">Contact Us</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="home" class="hero-bg relative min-h-screen flex items-center justify-center pt-20">
+        <div class="relative z-10 text-center px-4 max-w-5xl mx-auto">
+            <span class="reveal inline-block py-1.5 px-4 rounded-full bg-brand/20 text-brand-light text-sm font-semibold tracking-widest mb-6 border border-brand/40 backdrop-blur-sm uppercase">
+                Welcome to Restoval
+            </span>
+            <h1 class="reveal text-4xl md:text-6xl lg:text-7xl font-extrabold text-white leading-tight mb-6 drop-shadow-lg">
+                Train Like a Champion with <br class="hidden md:block"/> 
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-light to-white">Restoval Academy</span>
+            </h1>
+            <p class="reveal text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto font-light drop-shadow-md">
+                Empowering the next generation of cricketers. Join players of all ages to hone your skills, build strength, and master the gentleman's game.
+            </p>
+            <div class="reveal flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#programs" class="px-8 py-4 bg-brand text-white font-semibold rounded-full hover:bg-brand-dark transition-all transform hover:-translate-y-1 shadow-lg hover:shadow-brand/50 text-lg">
+                    Join Now
+                </a>
+                <a href="#about" class="px-8 py-4 bg-transparent text-white border-2 border-white font-semibold rounded-full hover:bg-white hover:text-brand-dark transition-all transform hover:-translate-y-1 shadow-lg text-lg">
+                    Learn More
+                </a>
+            </div>
+        </div>
+        
+        <!-- Scroll Down Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce z-10">
+            <a href="#about" class="text-white/70 hover:text-white transition-colors">
+                <i class="fa-solid fa-chevron-down text-3xl drop-shadow-lg"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row gap-12 items-center">
+                <!-- Text Content -->
+                <div class="lg:w-1/2 reveal">
+                    <h4 class="text-brand font-bold uppercase tracking-widest text-sm mb-2">About Us</h4>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Building the Future of Cricket at Restoval</h2>
+                    <p class="text-gray-600 mb-6 leading-relaxed text-lg">
+                        Restoval Cricket Coaching Academy is a premier institution dedicated to nurturing cricketing talent. Established with a passion for the sport, we provide state-of-the-art facilities and expert guidance to help you reach your maximum potential, whether you're taking your first stance or perfecting your cover drive.
+                    </p>
+                    
+                    <div class="grid sm:grid-cols-2 gap-6 mt-8">
+                        <div class="bg-gray-50 p-6 rounded-2xl border-l-4 border-brand shadow-sm hover:shadow-md transition-shadow">
+                            <i class="fa-solid fa-bullseye text-3xl text-brand mb-4"></i>
+                            <h3 class="font-bold text-xl mb-2 text-gray-900">Our Mission</h3>
+                            <p class="text-sm text-gray-600">To cultivate a competitive, disciplined, and passion-driven environment that shapes world-class cricketers.</p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-2xl border-l-4 border-brand-dark shadow-sm hover:shadow-md transition-shadow">
+                            <i class="fa-solid fa-eye text-3xl text-brand-dark mb-4"></i>
+                            <h3 class="font-bold text-xl mb-2 text-gray-900">Our Vision</h3>
+                            <p class="text-sm text-gray-600">To be the globally recognized hub for cricketing excellence, innovation, and character building.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Image Content -->
+                <div class="lg:w-1/2 reveal relative mt-10 lg:mt-0">
+                    <div class="absolute inset-0 bg-brand rounded-3xl transform translate-x-4 translate-y-4 -z-10 opacity-20"></div>
+                    <img src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=2000&auto=format&fit=crop" alt="Cricket Stadium" class="rounded-3xl shadow-xl w-full h-[500px] object-cover">
+                    
+                    <!-- Floating badge -->
+                    <div class="absolute bottom-8 -left-4 md:-left-8 bg-white p-4 rounded-xl shadow-xl flex items-center gap-4 animate-bounce hover:animate-none">
+                        <div class="bg-brand text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-inner">
+                            15+
+                        </div>
+                        <div>
+                            <p class="font-bold text-gray-900 leading-tight">Years of</p>
+                            <p class="text-sm text-gray-500 font-medium">Excellence</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Programs Section -->
+    <section id="programs" class="py-24 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+                <h4 class="text-brand font-bold uppercase tracking-widest text-sm mb-2">Our Courses</h4>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Elite Training Programs</h2>
+                <p class="text-gray-600 text-lg">Tailored coaching modules designed to target specific skill sets and elevate your overall game mechanics.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Program Card 1 -->
+                <div class="reveal bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 group">
+                    <div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mb-6 group-hover:bg-brand group-hover:text-white transition-colors duration-300">
+                        <i class="fa-solid fa-child-reaching text-2xl text-brand group-hover:text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Beginner Coaching</h3>
+                    <p class="text-gray-600 text-sm mb-6">Master the basics: stance, grip, and fundamentals of cricket in a fun environment.</p>
+                    <a href="#contact" class="text-brand font-semibold text-sm inline-flex items-center group-hover:text-brand-dark transition-colors">Join Program <i class="fa-solid fa-arrow-right ml-2 text-xs"></i></a>
+                </div>
+
+                <!-- Program Card 2 -->
+                <div class="reveal bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 group" style="transition-delay: 100ms;">
+                    <div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mb-6 group-hover:bg-brand group-hover:text-white transition-colors duration-300">
+                        <i class="fa-solid fa-running text-2xl text-brand group-hover:text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Intermediate</h3>
+                    <p class="text-gray-600 text-sm mb-6">Refine your techniques, learn match awareness, and participate in club-level matches.</p>
+                    <a href="#contact" class="text-brand font-semibold text-sm inline-flex items-center group-hover:text-brand-dark transition-colors">Join Program <i class="fa-solid fa-arrow-right ml-2 text-xs"></i></a>
+                </div>
+
+                <!-- Program Card 3 -->
+                <div class="reveal bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 group" style="transition-delay: 200ms;">
+                    <div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mb-6 group-hover:bg-brand group-hover:text-white transition-colors duration-300">
+                        <i class="fa-solid fa-trophy text-2xl text-brand group-hover:text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Pro Training</h3>
+                    <p class="text-gray-600 text-sm mb-6">High-intensity training for aspiring professionals targeting state and national levels.</p>
+                    <a href="#contact" class="text-brand font-semibold text-sm inline-flex items-center group-hover:text-brand-dark transition-colors">Join Program <i class="fa-solid fa-arrow-right ml-2 text-xs"></i></a>
+                </div>
+
+                <!-- Program Card 4 -->
+                <div class="reveal bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 group" style="transition-delay: 300ms;">
+                    <div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mb-6 group-hover:bg-brand group-hover:text-white transition-colors duration-300">
+                        <i class="fa-solid fa-baseball text-2xl text-brand group-hover:text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Bowling Academy</h3>
+                    <p class="text-gray-600 text-sm mb-6">Pace and spin specialized coaching focusing on run-up, action, and variations.</p>
+                    <a href="#contact" class="text-brand font-semibold text-sm inline-flex items-center group-hover:text-brand-dark transition-colors">Join Program <i class="fa-solid fa-arrow-right ml-2 text-xs"></i></a>
+                </div>
+
+                <!-- Program Card 5 -->
+                <div class="reveal bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 group">
+                    <div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mb-6 group-hover:bg-brand group-hover:text-white transition-colors duration-300">
+                        <i class="fa-solid fa-gavel text-2xl text-brand group-hover:text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Batting Masterclass</h3>
+                    <p class="text-gray-600 text-sm mb-6">Technical corrections, power hitting, and building long innings against all bowling types.</p>
+                    <a href="#contact" class="text-brand font-semibold text-sm inline-flex items-center group-hover:text-brand-dark transition-colors">Join Program <i class="fa-solid fa-arrow-right ml-2 text-xs"></i></a>
+                </div>
+
+                <!-- Program Card 6 -->
+                <div class="reveal bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 group" style="transition-delay: 100ms;">
+                    <div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mb-6 group-hover:bg-brand group-hover:text-white transition-colors duration-300">
+                        <i class="fa-solid fa-hands text-2xl text-brand group-hover:text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Wicket Keeping</h3>
+                    <p class="text-gray-600 text-sm mb-6">Agility drills, catching techniques, and game-reading skills for the man behind the stumps.</p>
+                    <a href="#contact" class="text-brand font-semibold text-sm inline-flex items-center group-hover:text-brand-dark transition-colors">Join Program <i class="fa-solid fa-arrow-right ml-2 text-xs"></i></a>
+                </div>
+
+                <!-- Program Card 7 -->
+                <div class="reveal bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 group" style="transition-delay: 200ms;">
+                    <div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mb-6 group-hover:bg-brand group-hover:text-white transition-colors duration-300">
+                        <i class="fa-solid fa-shield text-2xl text-brand group-hover:text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Fielding Excellence</h3>
+                    <p class="text-gray-600 text-sm mb-6">Reflex training, diving techniques, direct hits, and catching under pressure.</p>
+                    <a href="#contact" class="text-brand font-semibold text-sm inline-flex items-center group-hover:text-brand-dark transition-colors">Join Program <i class="fa-solid fa-arrow-right ml-2 text-xs"></i></a>
+                </div>
+
+                <!-- Program Card 8 -->
+                <div class="reveal bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 group" style="transition-delay: 300ms;">
+                    <div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mb-6 group-hover:bg-brand group-hover:text-white transition-colors duration-300">
+                        <i class="fa-solid fa-dumbbell text-2xl text-brand group-hover:text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Fitness & Strength</h3>
+                    <p class="text-gray-600 text-sm mb-6">Cricket-specific physical conditioning, stamina building, and injury prevention.</p>
+                    <a href="#contact" class="text-brand font-semibold text-sm inline-flex items-center group-hover:text-brand-dark transition-colors">Join Program <i class="fa-solid fa-arrow-right ml-2 text-xs"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Players Section -->
+    <section id="players" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+                <h4 class="text-brand font-bold uppercase tracking-widest text-sm mb-2">Hall of Fame</h4>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Learn From The Legends</h2>
+                <p class="text-gray-600 text-lg">Our coaching philosophy is heavily inspired by the techniques and temperament of these international icons.</p>
+            </div>
+
+            <!-- Player Grid (Populated by JS) -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                <div id="player-grid-container" class="contents"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Facilities Section -->
+    <section id="facilities" class="py-24 bg-gray-50 border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+                <h4 class="text-brand font-bold uppercase tracking-widest text-sm mb-2">Infrastructure</h4>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">World-Class Facilities</h2>
+                <p class="text-gray-600 text-lg">Train in an environment equipped with the latest technology and top-tier amenities.</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+                <!-- Facility Items -->
+                <div class="reveal flex flex-col items-center text-center p-8 bg-white rounded-2xl shadow-sm hover:shadow-lg transition-shadow border border-gray-100">
+                    <img src="https://img.icons8.com/color/96/000000/stadium.png" alt="Turf Nets" class="w-20 h-20 mb-5">
+                    <h3 class="font-bold text-lg text-gray-900">Turf & Astro Nets</h3>
+                    <p class="text-sm text-gray-500 mt-2">12 practice pitches for all conditions.</p>
+                </div>
+                <div class="reveal flex flex-col items-center text-center p-8 bg-white rounded-2xl shadow-sm hover:shadow-lg transition-shadow border border-gray-100" style="transition-delay: 100ms;">
+                    <img src="https://img.icons8.com/fluency/96/000000/cricket-ball.png" alt="Bowling Machines" class="w-20 h-20 mb-5">
+                    <h3 class="font-bold text-lg text-gray-900">Bowling Machines</h3>
+                    <p class="text-sm text-gray-500 mt-2">Bola machines for pace up to 160km/h.</p>
+                </div>
+                <div class="reveal flex flex-col items-center text-center p-8 bg-white rounded-2xl shadow-sm hover:shadow-lg transition-shadow border border-gray-100" style="transition-delay: 200ms;">
+                    <img src="https://img.icons8.com/color/96/000000/dumbbell.png" alt="Gym" class="w-20 h-20 mb-5">
+                    <h3 class="font-bold text-lg text-gray-900">Modern Gym</h3>
+                    <p class="text-sm text-gray-500 mt-2">Fully equipped for strength & conditioning.</p>
+                </div>
+                <div class="reveal flex flex-col items-center text-center p-8 bg-white rounded-2xl shadow-sm hover:shadow-lg transition-shadow border border-gray-100">
+                    <img src="https://img.icons8.com/color/96/000000/video-camera.png" alt="Video Analysis" class="w-20 h-20 mb-5">
+                    <h3 class="font-bold text-lg text-gray-900">Video Analysis</h3>
+                    <p class="text-sm text-gray-500 mt-2">Biomechanical software for technique correction.</p>
+                </div>
+                <div class="reveal flex flex-col items-center text-center p-8 bg-white rounded-2xl shadow-sm hover:shadow-lg transition-shadow border border-gray-100" style="transition-delay: 100ms;">
+                    <img src="https://img.icons8.com/color/96/000000/building.png" alt="Indoor Practice" class="w-20 h-20 mb-5">
+                    <h3 class="font-bold text-lg text-gray-900">Indoor Arena</h3>
+                    <p class="text-sm text-gray-500 mt-2">All-weather facility for monsoon practice.</p>
+                </div>
+                <div class="reveal flex flex-col items-center text-center p-8 bg-white rounded-2xl shadow-sm hover:shadow-lg transition-shadow border border-gray-100" style="transition-delay: 200ms;">
+                    <img src="https://img.icons8.com/color/96/000000/light-on--v1.png" alt="Floodlit" class="w-20 h-20 mb-5">
+                    <h3 class="font-bold text-lg text-gray-900">Floodlit Ground</h3>
+                    <p class="text-sm text-gray-500 mt-2">International standard lighting for D/N matches.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Achievements Section (Counters) -->
+    <section id="achievements" class="py-16 bg-brand relative overflow-hidden">
+        <!-- Abstract background pattern -->
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 24px 24px;"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-white/20">
+                <div class="reveal text-white">
+                    <div class="text-4xl md:text-5xl font-extrabold mb-2"><span class="counter" data-target="1000">0</span>+</div>
+                    <div class="text-green-100 font-medium tracking-wide">Students Trained</div>
+                </div>
+                <div class="reveal text-white" style="transition-delay: 100ms;">
+                    <div class="text-4xl md:text-5xl font-extrabold mb-2"><span class="counter" data-target="150">0</span>+</div>
+                    <div class="text-green-100 font-medium tracking-wide">District Players</div>
+                </div>
+                <div class="reveal text-white" style="transition-delay: 200ms;">
+                    <div class="text-4xl md:text-5xl font-extrabold mb-2"><span class="counter" data-target="40">0</span>+</div>
+                    <div class="text-green-100 font-medium tracking-wide">State Players</div>
+                </div>
+                <div class="reveal text-white" style="transition-delay: 300ms;">
+                    <div class="text-4xl md:text-5xl font-extrabold mb-2"><span class="counter" data-target="15">0</span>+</div>
+                    <div class="text-green-100 font-medium tracking-wide">National Players</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Coaches Section -->
+    <section id="coaches" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+                <h4 class="text-brand font-bold uppercase tracking-widest text-sm mb-2">Our Mentors</h4>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Expert Coaching Staff</h2>
+                <p class="text-gray-600 text-lg">Learn from professionals who have played the game at the highest levels.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-10">
+                <!-- Coach 1 -->
+                <div class="reveal bg-gray-50 rounded-3xl overflow-hidden shadow-lg group border border-gray-100">
+                    <div class="relative h-80 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=870&auto=format&fit=crop" alt="Head Coach" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out">
+                        <div class="absolute bottom-0 left-0 bg-brand text-white px-5 py-2 rounded-tr-xl font-bold tracking-wide">Head Coach</div>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-1">Ravi Sharma</h3>
+                        <p class="text-brand font-semibold mb-4">Batting Specialist</p>
+                        <p class="text-gray-600 text-sm mb-6 border-b border-gray-200 pb-6 leading-relaxed">Former State Captain with over 15 years of professional coaching experience. Specializes in building solid foundational techniques and match temperament.</p>
+                        <div class="flex justify-between items-center text-sm font-medium text-gray-500">
+                            <span class="bg-white px-3 py-1 rounded-full shadow-sm border border-gray-100"><i class="fa-solid fa-calendar-alt text-brand mr-2"></i> 15+ Yrs Exp.</span>
+                            <div class="flex space-x-3 text-gray-400">
+                                <a href="#" class="hover:text-brand transition-colors"><i class="fa-brands fa-twitter text-lg"></i></a>
+                                <a href="#" class="hover:text-brand transition-colors"><i class="fa-brands fa-linkedin text-lg"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coach 2 -->
+                <div class="reveal bg-gray-50 rounded-3xl overflow-hidden shadow-lg group border border-gray-100" style="transition-delay: 150ms;">
+                    <div class="relative h-80 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=890&auto=format&fit=crop" alt="Bowling Coach" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out">
+                        <div class="absolute bottom-0 left-0 bg-brand text-white px-5 py-2 rounded-tr-xl font-bold tracking-wide">Senior Coach</div>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-1">David Thomas</h3>
+                        <p class="text-brand font-semibold mb-4">Pace Bowling Expert</p>
+                        <p class="text-gray-600 text-sm mb-6 border-b border-gray-200 pb-6 leading-relaxed">NCA Level 3 Certified Coach. Has mentored multiple fast bowlers who currently play in top-tier national leagues. Focuses on biomechanics.</p>
+                        <div class="flex justify-between items-center text-sm font-medium text-gray-500">
+                            <span class="bg-white px-3 py-1 rounded-full shadow-sm border border-gray-100"><i class="fa-solid fa-calendar-alt text-brand mr-2"></i> 10+ Yrs Exp.</span>
+                            <div class="flex space-x-3 text-gray-400">
+                                <a href="#" class="hover:text-brand transition-colors"><i class="fa-brands fa-twitter text-lg"></i></a>
+                                <a href="#" class="hover:text-brand transition-colors"><i class="fa-brands fa-linkedin text-lg"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coach 3 -->
+                <div class="reveal bg-gray-50 rounded-3xl overflow-hidden shadow-lg group border border-gray-100" style="transition-delay: 300ms;">
+                    <div class="relative h-80 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1517548770265-f9350616186f?q=80&w=872&auto=format&fit=crop" alt="Fielding Coach" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out">
+                        <div class="absolute bottom-0 left-0 bg-brand text-white px-5 py-2 rounded-tr-xl font-bold tracking-wide">Specialist Coach</div>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-1">Amit Patel</h3>
+                        <p class="text-brand font-semibold mb-4">Fielding & Fitness</p>
+                        <p class="text-gray-600 text-sm mb-6 border-b border-gray-200 pb-6 leading-relaxed">Certified Sports Kinesiologist. Focuses on agility, reflex training, and overall athletic development to create lightning-fast fielders.</p>
+                        <div class="flex justify-between items-center text-sm font-medium text-gray-500">
+                            <span class="bg-white px-3 py-1 rounded-full shadow-sm border border-gray-100"><i class="fa-solid fa-calendar-alt text-brand mr-2"></i> 8+ Yrs Exp.</span>
+                            <div class="flex space-x-3 text-gray-400">
+                                <a href="#" class="hover:text-brand transition-colors"><i class="fa-brands fa-twitter text-lg"></i></a>
+                                <a href="#" class="hover:text-brand transition-colors"><i class="fa-brands fa-linkedin text-lg"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-24 bg-gray-100 overflow-hidden relative">
+        <!-- Abstract background shapes -->
+        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 rounded-full bg-brand/10 blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 rounded-full bg-brand/10 blur-3xl pointer-events-none"></div>
+        
+        <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+            <i class="fa-solid fa-quote-left text-6xl text-brand/20 mb-8"></i>
+            
+            <div id="testimonial-container" class="min-h-[250px] relative">
+                <!-- Testimonial 1 -->
+                <div class="testimonial-slide active">
+                    <p class="text-xl md:text-3xl text-gray-700 italic font-light mb-10 leading-relaxed">"Restoval completely transformed my game. The personalized attention I received from the batting coaches helped me get selected for the under-19 state team."</p>
+                    <div class="flex items-center justify-center gap-5">
+                        <img src="https://ui-avatars.com/api/?name=Arjun+K&background=16a34a&color=fff&rounded=true&size=128" alt="Student" class="w-16 h-16 rounded-full border-2 border-brand shadow-md">
+                        <div class="text-left">
+                            <h4 class="font-bold text-gray-900 text-lg">Arjun K.</h4>
+                            <p class="text-sm text-brand font-medium">State U-19 Player</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 2 -->
+                <div class="testimonial-slide">
+                    <p class="text-xl md:text-3xl text-gray-700 italic font-light mb-10 leading-relaxed">"The bowling machines and video analysis tools at Restoval are top-notch. I was able to identify a flaw in my action and correct it within weeks."</p>
+                    <div class="flex items-center justify-center gap-5">
+                        <img src="https://ui-avatars.com/api/?name=Sam+D&background=16a34a&color=fff&rounded=true&size=128" alt="Student" class="w-16 h-16 rounded-full border-2 border-brand shadow-md">
+                        <div class="text-left">
+                            <h4 class="font-bold text-gray-900 text-lg">Sam D.</h4>
+                            <p class="text-sm text-brand font-medium">Pace Bowler</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="testimonial-slide">
+                    <p class="text-xl md:text-3xl text-gray-700 italic font-light mb-10 leading-relaxed">"Enrolling my 10-year-old was the best decision. The coaches are incredibly patient and ensure the kids learn the right techniques while having absolute fun."</p>
+                    <div class="flex items-center justify-center gap-5">
+                        <img src="https://ui-avatars.com/api/?name=Priya+M&background=16a34a&color=fff&rounded=true&size=128" alt="Parent" class="w-16 h-16 rounded-full border-2 border-brand shadow-md">
+                        <div class="text-left">
+                            <h4 class="font-bold text-gray-900 text-lg">Priya M.</h4>
+                            <p class="text-sm text-brand font-medium">Proud Parent</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 4 -->
+                <div class="testimonial-slide">
+                    <p class="text-xl md:text-3xl text-gray-700 italic font-light mb-10 leading-relaxed">"The competitive environment and frequent practice matches prepare you perfectly for professional tournaments. Highly recommended academy for serious players!"</p>
+                    <div class="flex items-center justify-center gap-5">
+                        <img src="https://ui-avatars.com/api/?name=Rahul+V&background=16a34a&color=fff&rounded=true&size=128" alt="Student" class="w-16 h-16 rounded-full border-2 border-brand shadow-md">
+                        <div class="text-left">
+                            <h4 class="font-bold text-gray-900 text-lg">Rahul V.</h4>
+                            <p class="text-sm text-brand font-medium">Club Cricketer</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slider Controls -->
+            <div class="flex justify-center gap-3 mt-10">
+                <button class="slider-dot w-3 h-3 rounded-full bg-brand transition-colors focus:outline-none" aria-label="Slide 1" data-index="0"></button>
+                <button class="slider-dot w-3 h-3 rounded-full bg-gray-300 transition-colors focus:outline-none" aria-label="Slide 2" data-index="1"></button>
+                <button class="slider-dot w-3 h-3 rounded-full bg-gray-300 transition-colors focus:outline-none" aria-label="Slide 3" data-index="2"></button>
+                <button class="slider-dot w-3 h-3 rounded-full bg-gray-300 transition-colors focus:outline-none" aria-label="Slide 4" data-index="3"></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-end mb-12 reveal">
+                <div>
+                    <h4 class="text-brand font-bold uppercase tracking-widest text-sm mb-2">Moments</h4>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">In Action</h2>
+                </div>
+                <a href="#" class="hidden md:inline-flex text-brand font-semibold hover:text-brand-dark transition-colors items-center gap-2 border-b-2 border-brand pb-1">View All Photos <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <!-- Masonry Grid -->
+            <div class="gallery-grid reveal">
+                <div class="gallery-item rounded-2xl overflow-hidden shadow-sm relative group cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1624194675549-0d12cefb99b7?q=80&w=800&auto=format&fit=crop" alt="Batting Practice">
+                    <div class="absolute inset-0 bg-brand/80 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center backdrop-blur-sm">
+                        <i class="fa-brands fa-instagram text-white text-4xl transform scale-50 group-hover:scale-100 transition-transform duration-300"></i>
+                    </div>
+                </div>
+                <div class="gallery-item rounded-2xl overflow-hidden shadow-sm relative group cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=800&auto=format&fit=crop" alt="Stadium View">
+                    <div class="absolute inset-0 bg-brand/80 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center backdrop-blur-sm">
+                        <i class="fa-brands fa-instagram text-white text-4xl transform scale-50 group-hover:scale-100 transition-transform duration-300"></i>
+                    </div>
+                </div>
+                <div class="gallery-item rounded-2xl overflow-hidden shadow-sm relative group cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1587280501635-68a0e82cd5ff?q=80&w=800&auto=format&fit=crop" alt="Ball Close Up">
+                    <div class="absolute inset-0 bg-brand/80 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center backdrop-blur-sm">
+                        <i class="fa-brands fa-instagram text-white text-4xl transform scale-50 group-hover:scale-100 transition-transform duration-300"></i>
+                    </div>
+                </div>
+                <div class="gallery-item rounded-2xl overflow-hidden shadow-sm relative group cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1593341646782-e0b495cff86d?q=80&w=800&auto=format&fit=crop" alt="Match Time">
+                    <div class="absolute inset-0 bg-brand/80 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center backdrop-blur-sm">
+                        <i class="fa-brands fa-instagram text-white text-4xl transform scale-50 group-hover:scale-100 transition-transform duration-300"></i>
+                    </div>
+                </div>
+                <div class="gallery-item rounded-2xl overflow-hidden shadow-sm relative group cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1607734834519-d8576ae60ea6?q=80&w=800&auto=format&fit=crop" alt="Training">
+                    <div class="absolute inset-0 bg-brand/80 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center backdrop-blur-sm">
+                        <i class="fa-brands fa-instagram text-white text-4xl transform scale-50 group-hover:scale-100 transition-transform duration-300"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-10 text-center md:hidden">
+                <a href="#" class="inline-flex text-brand font-semibold hover:text-brand-dark transition-colors items-center gap-2 border-b-2 border-brand pb-1">View All Photos <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 bg-gray-50 border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16">
+                <!-- Contact Info -->
+                <div class="reveal">
+                    <h4 class="text-brand font-bold uppercase tracking-widest text-sm mb-2">Get In Touch</h4>
+                    <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-6">Contact Restoval Cricket Coaching Academy</h2>
+                    <p class="text-gray-600 mb-12 text-lg">Ready to take your cricket skills to the next level? Drop us a message or visit our academy. We're always looking for new talent to join our ranks.</p>
+                    
+                    <div class="space-y-8 mb-12">
+                        <div class="flex items-start gap-5">
+                            <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-md text-brand flex-shrink-0 border border-gray-100">
+                                <i class="fa-solid fa-location-dot text-2xl"></i>
+                            </div>
+                            <div class="pt-1">
+                                <h4 class="font-bold text-gray-900 mb-1 text-lg">Academy Address</h4>
+                                <p class="text-gray-600">124 Sports Complex Road,<br>Greenfield District, NY 10001</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-5">
+                            <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-md text-brand flex-shrink-0 border border-gray-100">
+                                <i class="fa-solid fa-phone text-2xl"></i>
+                            </div>
+                            <div class="pt-1">
+                                <h4 class="font-bold text-gray-900 mb-1 text-lg">Phone Number</h4>
+                                <p class="text-gray-600">+1 (555) 123-4567<br>+1 (555) 987-6543</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-5">
+                            <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-md text-brand flex-shrink-0 border border-gray-100">
+                                <i class="fa-solid fa-envelope text-2xl"></i>
+                            </div>
+                            <div class="pt-1">
+                                <h4 class="font-bold text-gray-900 mb-1 text-lg">Email Address</h4>
+                                <p class="text-gray-600">admissions@restoval.com<br>info@restoval.com</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Icons -->
+                    <div class="flex gap-4">
+                        <a href="#" class="w-12 h-12 bg-brand text-white rounded-full flex items-center justify-center hover:bg-brand-dark transition-colors shadow-md transform hover:-translate-y-1"><i class="fa-brands fa-facebook-f text-lg"></i></a>
+                        <a href="#" class="w-12 h-12 bg-brand text-white rounded-full flex items-center justify-center hover:bg-brand-dark transition-colors shadow-md transform hover:-translate-y-1"><i class="fa-brands fa-instagram text-lg"></i></a>
+                        <a href="#" class="w-12 h-12 bg-brand text-white rounded-full flex items-center justify-center hover:bg-brand-dark transition-colors shadow-md transform hover:-translate-y-1"><i class="fa-brands fa-youtube text-lg"></i></a>
+                        <a href="#" class="w-12 h-12 bg-brand text-white rounded-full flex items-center justify-center hover:bg-brand-dark transition-colors shadow-md transform hover:-translate-y-1"><i class="fa-brands fa-whatsapp text-xl"></i></a>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="reveal bg-white p-10 rounded-3xl shadow-xl border border-gray-100">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-8">Send us a Message</h3>
+                    <form onsubmit="event.preventDefault(); alert('Form submitted successfully! We will contact you soon.');">
+                        <div class="mb-6">
+                            <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+                            <input type="text" id="name" required class="w-full px-5 py-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-colors bg-gray-50 focus:bg-white" placeholder="John Doe">
+                        </div>
+                        <div class="mb-6">
+                            <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+                            <input type="email" id="email" required class="w-full px-5 py-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-colors bg-gray-50 focus:bg-white" placeholder="john@example.com">
+                        </div>
+                        <div class="mb-6">
+                            <label for="phone" class="block text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
+                            <input type="tel" id="phone" required class="w-full px-5 py-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-colors bg-gray-50 focus:bg-white" placeholder="+1 (123) 456-7890">
+                        </div>
+                        <div class="mb-8">
+                            <label for="message" class="block text-sm font-semibold text-gray-700 mb-2">Message</label>
+                            <textarea id="message" rows="5" required class="w-full px-5 py-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-brand focus:border-brand outline-none transition-colors bg-gray-50 focus:bg-white resize-none" placeholder="I am interested in joining the advanced program..."></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-brand text-white font-bold py-4 rounded-xl hover:bg-brand-dark transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-lg">
+                            Submit Inquiry
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Map Placeholder -->
+            <div class="mt-20 reveal rounded-3xl overflow-hidden shadow-lg h-96 bg-gray-200 relative border border-gray-100">
+                <!-- Simulated Google Map for demo -->
+                <div class="absolute inset-0 bg-[url('https://maps.googleapis.com/maps/api/staticmap?center=New+York,NY&zoom=13&size=1200x400&scale=2&maptype=roadmap&format=jpg')] bg-cover bg-center grayscale opacity-80"></div>
+                <div class="absolute inset-0 bg-brand/10"></div>
+                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div class="bg-white px-8 py-4 rounded-full shadow-xl text-brand font-bold flex items-center gap-3 text-lg">
+                        <i class="fa-solid fa-map-pin"></i> Restoval Academy Location Map
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 pt-20 pb-10 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 border-b border-gray-800 pb-16">
+                
+                <!-- Brand Information -->
+                <div>
+                    <a href="#" class="flex items-center gap-2 mb-6 hover:opacity-80 transition-opacity">
+                        <i class="fa-solid fa-medal text-brand text-4xl"></i>
+                        <span class="font-bold text-3xl tracking-tight text-white">Restoval<span class="text-brand">.</span></span>
+                    </a>
+                    <p class="text-gray-400 text-sm mb-8 leading-relaxed">
+                        Restoval Cricket Coaching Academy is dedicated to molding the future stars of cricket with world-class facilities and expert mentorship.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-brand hover:text-white transition-colors"><i class="fa-brands fa-facebook-f text-sm"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-brand hover:text-white transition-colors"><i class="fa-brands fa-twitter text-sm"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-brand hover:text-white transition-colors"><i class="fa-brands fa-instagram text-sm"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-brand hover:text-white transition-colors"><i class="fa-brands fa-youtube text-sm"></i></a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="font-bold text-lg mb-6 text-white border-l-4 border-brand pl-3">Quick Links</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#home" class="text-gray-400 hover:text-brand transition-colors text-sm flex items-center"><i class="fa-solid fa-chevron-right text-[10px] mr-3"></i> Home</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-brand transition-colors text-sm flex items-center"><i class="fa-solid fa-chevron-right text-[10px] mr-3"></i> About Us</a></li>
+                        <li><a href="#coaches" class="text-gray-400 hover:text-brand transition-colors text-sm flex items-center"><i class="fa-solid fa-chevron-right text-[10px] mr-3"></i> Our Coaches</a></li>
+                        <li><a href="#gallery" class="text-gray-400 hover:text-brand transition-colors text-sm flex items-center"><i class="fa-solid fa-chevron-right text-[10px] mr-3"></i> Gallery</a></li>
+                        <li><a href="#testimonials" class="text-gray-400 hover:text-brand transition-colors text-sm flex items-center"><i class="fa-solid fa-chevron-right text-[10px] mr-3"></i> Reviews</a></li>
+                    </ul>
+                </div>
+
+                <!-- Programs -->
+                <div>
+                    <h4 class="font-bold text-lg mb-6 text-white border-l-4 border-brand pl-3">Programs</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#programs" class="text-gray-400 hover:text-brand transition-colors text-sm flex items-center"><i class="fa-solid fa-chevron-right text-[10px] mr-3"></i> Beginner Coaching</a></li>
+                        <li><a href="#programs" class="text-gray-400 hover:text-brand transition-colors text-sm flex items-center"><i class="fa-solid fa-chevron-right text-[10px] mr-3"></i> Bowling Academy</a></li>
+                        <li><a href="#programs" class="text-gray-400 hover:text-brand transition-colors text-sm flex items-center"><i class="fa-solid fa-chevron-right text-[10px] mr-3"></i> Batting Masterclass</a></li>
+                        <li><a href="#programs" class="text-gray-400 hover:text-brand transition-colors text-sm flex items-center"><i class="fa-solid fa-chevron-right text-[10px] mr-3"></i> Wicket Keeping</a></li>
+                        <li><a href="#programs" class="text-gray-400 hover:text-brand transition-colors text-sm flex items-center"><i class="fa-solid fa-chevron-right text-[10px] mr-3"></i> Fitness & Strength</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div>
+                    <h4 class="font-bold text-lg mb-6 text-white border-l-4 border-brand pl-3">Contact Info</h4>
+                    <ul class="space-y-5">
+                        <li class="flex items-start text-gray-400 text-sm">
+                            <i class="fa-solid fa-location-dot mt-1 mr-4 text-brand text-lg"></i>
+                            <span class="leading-relaxed">124 Sports Complex Road, Greenfield District, NY 10001</span>
+                        </li>
+                        <li class="flex items-center text-gray-400 text-sm">
+                            <i class="fa-solid fa-phone mr-4 text-brand text-lg"></i>
+                            +1 (555) 123-4567
+                        </li>
+                        <li class="flex items-center text-gray-400 text-sm">
+                            <i class="fa-solid fa-envelope mr-4 text-brand text-lg"></i>
+                            info@restoval.com
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Copyright Notice -->
+            <div class="text-center flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+                <p>&copy; <script>document.write(new Date().getFullYear())</script> Restoval Cricket Coaching Academy. All Rights Reserved.</p>
+                <div class="mt-4 md:mt-0 space-x-6">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript logic and Interactions -->
+    <script>
+        // Data for Featured Players Grid
+        // Used UI-Avatars for reliable, high-quality placeholders matching the brand aesthetic
+        const playersData = [
+            { name: "Virat Kohli", country: "India" },
+            { name: "Rohit Sharma", country: "India" },
+            { name: "MS Dhoni", country: "India" },
+            { name: "Sachin Tendulkar", country: "India" },
+            { name: "Jasprit Bumrah", country: "India" },
+            { name: "AB de Villiers", country: "South Africa" },
+            { name: "Kane Williamson", country: "New Zealand" },
+            { name: "Steve Smith", country: "Australia" },
+            { name: "Joe Root", country: "England" },
+            { name: "Ben Stokes", country: "England" },
+            { name: "Babar Azam", country: "Pakistan" },
+            { name: "David Warner", country: "Australia" }
+        ];
+
+        // Populate Players Grid dynamically
+        const playerGrid = document.getElementById('player-grid-container');
+        playersData.forEach((player, index) => {
+            const delay = (index % 4) * 100; // Staggered animation delay based on grid column
+            const encodedName = player.name.replace(' ', '+');
+            const placeholderUrl = `https://ui-avatars.com/api/?name=${encodedName}&background=f3f4f6&color=16a34a&size=400&font-size=0.33&bold=true`;
+            
+            const playerHTML = `
+                <div class="reveal player-card relative overflow-hidden rounded-2xl shadow-sm border border-gray-100 group bg-gray-50 cursor-pointer" style="transition-delay: ${delay}ms;">
+                    <img src="${placeholderUrl}" alt="${player.name}" class="w-full aspect-[4/5] object-cover">
+                    <div class="overlay absolute w-full h-full left-0 flex flex-col justify-end p-6">
+                        <h3 class="text-white font-bold text-xl mb-1">${player.name}</h3>
+                        <p class="text-brand-light font-medium text-sm flex items-center"><i class="fa-solid fa-flag text-xs mr-2"></i> ${player.country}</p>
+                    </div>
+                </div>
+            `;
+            playerGrid.insertAdjacentHTML('beforeend', playerHTML);
+        });
+
+        // Mobile Menu Toggle Logic
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+
+        mobileBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('open');
+            const icon = mobileBtn.querySelector('i');
+            if (mobileMenu.classList.contains('open')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // Close mobile menu on link click
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('open');
+                mobileBtn.querySelector('i').classList.remove('fa-times');
+                mobileBtn.querySelector('i').classList.add('fa-bars');
+            });
+        });
+
+        // Sticky Navbar Logic (Changes style on scroll)
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+                navbar.classList.remove('py-3');
+                navbar.classList.add('py-2');
+            } else {
+                navbar.classList.remove('scrolled');
+                navbar.classList.add('py-3');
+                navbar.classList.remove('py-2');
+            }
+        });
+
+        // Scroll Animations using Intersection Observer API
+        const reveals = document.querySelectorAll('.reveal');
+        const revealOptions = {
+            threshold: 0.15,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                entry.target.classList.add('active');
+                observer.unobserve(entry.target);
+            });
+        }, revealOptions);
+
+        reveals.forEach(reveal => {
+            revealOnScroll.observe(reveal);
+        });
+
+        // Animated Counters Logic
+        const counters = document.querySelectorAll('.counter');
+        const counterObserver = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const target = +entry.target.getAttribute('data-target');
+                    const duration = 2000; // Total animation duration in ms
+                    const increment = target / (duration / 16); // assuming 60fps (~16ms per frame)
+                    
+                    let current = 0;
+                    const updateCounter = () => {
+                        current += increment;
+                        if (current < target) {
+                            entry.target.innerText = Math.ceil(current);
+                            requestAnimationFrame(updateCounter);
+                        } else {
+                            entry.target.innerText = target;
+                        }
+                    };
+                    updateCounter();
+                    observer.unobserve(entry.target); // Only animate once
+                }
+            });
+        }, { threshold: 0.5 });
+
+        counters.forEach(counter => {
+            counterObserver.observe(counter);
+        });
+
+        // Testimonial Slider Logic
+        const slides = document.querySelectorAll('.testimonial-slide');
+        const dots = document.querySelectorAll('.slider-dot');
+        let currentSlide = 0;
+        let slideInterval;
+
+        function showSlide(index) {
+            // Hide all slides and reset dots
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => {
+                dot.classList.remove('bg-brand');
+                dot.classList.add('bg-gray-300');
+            });
+            
+            // Show current slide and active dot
+            slides[index].classList.add('active');
+            dots[index].classList.remove('bg-gray-300');
+            dots[index].classList.add('bg-brand');
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        // Initialize auto-sliding
+        function startSlider() {
+            slideInterval = setInterval(nextSlide, 5000); // Slide every 5 seconds
+        }
+
+        // Manual dot clicking interaction
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                clearInterval(slideInterval);
+                currentSlide = index;
+                showSlide(currentSlide);
+                startSlider(); // Restart auto-interval after manual click
+            });
+        });
+
+        // Start the slider on page load
+        startSlider();
+
+    </script>
+</body>
+</html>
